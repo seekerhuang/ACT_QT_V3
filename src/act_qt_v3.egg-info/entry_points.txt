@@ -1,0 +1,2 @@
+[console_scripts]
+act-qt-preprocess = act_qt_v3.cli.preprocess_data:main

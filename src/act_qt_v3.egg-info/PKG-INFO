@@ -1,0 +1,7 @@
+Metadata-Version: 2.4
+Name: act-qt-v3
+Version: 0.1.0
+Summary: Production-oriented quantitative trading data preprocessing toolkit.
+Requires-Python: >=3.10
+Requires-Dist: pandas>=2.3.0
+Requires-Dist: pyarrow>=23.0.0

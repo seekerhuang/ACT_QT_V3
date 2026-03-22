@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "act-qt-v3"
+version = "0.1.0"
+description = "Production-oriented quantitative trading data preprocessing toolkit."
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.3.0",
+    "pyarrow>=23.0.0",
+]
+
+[project.scripts]
+act-qt-preprocess = "act_qt_v3.cli.preprocess_data:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

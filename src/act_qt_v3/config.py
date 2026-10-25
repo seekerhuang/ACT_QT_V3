@@ -45,6 +45,8 @@ class ReadOptions:
     columns: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
+        if self.file_limit is not None and self.file_limit <= 0:
+            raise ValueError("file_limit must be positive")
         object.__setattr__(self, "instrument_whitelist", tuple(self.instrument_whitelist))
         object.__setattr__(self, "columns", tuple(self.columns))
 

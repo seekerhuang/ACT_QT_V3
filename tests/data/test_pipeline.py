@@ -10,7 +10,7 @@ from act_qt_v3.config import (
     ProcessingMode,
     ReadOptions,
 )
-from act_qt_v3.preprocess.pipeline import run_preprocess_job
+from act_qt_v3.preprocess.pipeline import _add_event_columns, run_preprocess_job
 
 
 def write_parquet(df: pd.DataFrame, path: Path) -> None:
@@ -298,3 +298,20 @@ def test_pipeline_writes_idempotent_outputs(tmp_path: Path) -> None:
     assert (expected_dir / "part-00000.parquet").exists()
     assert (expected_dir / "metadata.json").exists()
     assert result.metadata["output_path"] == str(expected_dir)
+
+
+@pytest.mark.parametrize("unit", ["s", "us", "ns"])
+def test_minute_event_timestamp_preserves_time_and_uses_nanoseconds(unit):
+    times = pd.DatetimeIndex(["2024-01-02 09:31:00"]).as_unit(unit)
+    index = pd.MultiIndex.from_arrays(
+        [pd.DatetimeIndex(["2024-01-02"]), times],
+        names=["trade_date", "trade_time"],
+    )
+    source = pd.DataFrame({"ts_code": ["000001.SZ"]}, index=index)
+    original = source.copy(deep=True)
+
+    result = _add_event_columns(source, DatasetKind.STOCK_1MIN)
+
+    assert str(result["event_ts"].dtype) == "datetime64[ns, Asia/Shanghai]"
+    assert result["event_ts"].iloc[0] == pd.Timestamp("2024-01-02 09:31:00", tz="Asia/Shanghai")
+    pd.testing.assert_frame_equal(source, original)

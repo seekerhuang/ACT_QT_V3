@@ -73,7 +73,7 @@ def _add_event_columns(frame: pd.DataFrame, dataset_kind: DatasetKind) -> pd.Dat
             event_ts = trade_time.tz_localize("Asia/Shanghai")
         else:
             event_ts = trade_time.tz_convert("Asia/Shanghai")
-        enriched["event_ts"] = event_ts
+        enriched["event_ts"] = event_ts.as_unit("ns")
         return enriched
 
     if dataset_kind == DatasetKind.STOCK_AUCTION_OPEN:

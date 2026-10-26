@@ -54,6 +54,10 @@ class ReadOptions:
             raise ValueError("file_limit must be a positive integer")
         object.__setattr__(self, "instrument_whitelist", tuple(self.instrument_whitelist))
         object.__setattr__(self, "columns", tuple(self.columns))
+        date_from = self.normalized_date_from
+        date_to = self.normalized_date_to
+        if date_from is not None and date_to is not None and date_from > date_to:
+            raise ValueError("date_from must be on or before date_to")
 
     @property
     def normalized_date_from(self) -> Optional[pd.Timestamp]:

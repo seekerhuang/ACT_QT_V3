@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
+from numbers import Integral
 from pathlib import Path
 from typing import Iterable, Optional
 
@@ -45,8 +46,12 @@ class ReadOptions:
     columns: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
-        if self.file_limit is not None and self.file_limit <= 0:
-            raise ValueError("file_limit must be positive")
+        if self.file_limit is not None and (
+            isinstance(self.file_limit, bool)
+            or not isinstance(self.file_limit, Integral)
+            or self.file_limit <= 0
+        ):
+            raise ValueError("file_limit must be a positive integer")
         object.__setattr__(self, "instrument_whitelist", tuple(self.instrument_whitelist))
         object.__setattr__(self, "columns", tuple(self.columns))
 

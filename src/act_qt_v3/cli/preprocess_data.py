@@ -37,7 +37,9 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
-    symbols = tuple(filter(None, (args.symbols or "").split(",")))
+    symbols = tuple(
+        symbol.strip() for symbol in (args.symbols or "").split(",") if symbol.strip()
+    )
 
     config = PreprocessJobConfig(
         data_root=args.data_root,
